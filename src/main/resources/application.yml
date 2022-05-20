@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: gateway
+  config:
+    import: optional:consul:${CONSUL_HOST:localhost}:8500
+  cloud:
+    consul:
+      config:
+        format: yaml
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: authentication
+          uri: lb://authentication
+          predicates:
+            - Path=/auth/**
+          filters:
+            - RewritePath=/auth/(?<path>.*), /$\{path}
+
+        - id: image-service
+          uri: lb://image-service
+          predicates:
+            Path=/images/**
+          filters:
+            - RewritePath=/images/(?<path>.*), /images/$\{path}

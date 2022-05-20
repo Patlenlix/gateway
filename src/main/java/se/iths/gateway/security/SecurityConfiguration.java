@@ -40,6 +40,7 @@ public class SecurityConfiguration {
                 .authorizeExchange()
                 .pathMatchers("/auth/**").permitAll()
                 .pathMatchers("/images/**").authenticated()
+                .pathMatchers("/short/**").authenticated()
                 .anyExchange().hasRole("ADMIN")
                 .and().build();
     }

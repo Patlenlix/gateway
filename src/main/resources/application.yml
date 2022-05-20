@@ -1,16 +1,12 @@
-server:
-  port: 8000
 spring:
   application:
     name: gateway
+  config:
+    import: optional:consul:${CONSUL_HOST:localhost}:8500
   cloud:
     consul:
-      discovery:
-        register: false
-        registerHealthCheck: false
       config:
-        enabled: false
-      host: ${CONSUL_HOST:localhost}
+        format: yaml
     gateway:
       discovery:
         locator:

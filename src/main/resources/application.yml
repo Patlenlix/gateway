@@ -1,0 +1,31 @@
+server:
+  port: 8000
+spring:
+  application:
+    name: gateway
+  cloud:
+    consul:
+      discovery:
+        register: false
+        registerHealthCheck: false
+      config:
+        enabled: false
+      host: ${CONSUL_HOST:localhost}
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: authentication
+          uri: lb://authentication
+          predicates:
+            - Path=/auth/**
+          filters:
+            - RewritePath=/auth/(?<path>.*), /$\{path}
+
+        - id: image-service
+          uri: lb://image-service
+          predicates:
+            Path=/images/**
+          filters:
+            - RewritePath=/images/(?<path>.*), /images/$\{path}

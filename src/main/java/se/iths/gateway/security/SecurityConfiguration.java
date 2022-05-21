@@ -2,6 +2,7 @@ package se.iths.gateway.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -41,6 +42,7 @@ public class SecurityConfiguration {
                 .pathMatchers("/auth/**").permitAll()
                 .pathMatchers("/images/**").authenticated()
                 .pathMatchers("/short/**").authenticated()
+                .pathMatchers(HttpMethod.GET, "/s/**").permitAll()
                 .anyExchange().hasRole("ADMIN")
                 .and().build();
     }

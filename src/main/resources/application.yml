@@ -22,6 +22,14 @@ spring:
         - id: image-service
           uri: lb://image-service
           predicates:
-            Path=/images/**
+            - Path=/images/**
           filters:
             - RewritePath=/images/(?<path>.*), /images/$\{path}
+
+        - id: url-shortening-service
+          uri: lb://url-shortener
+          predicates:
+            - Path=/short/**, /s/**
+          filters:
+            - RewritePath=/short/(?<path>.*), /short/$\{path}
+            - RewritePath=/s/(?<path>.*), /s/$\{path}

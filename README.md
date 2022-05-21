@@ -6,7 +6,7 @@ This is a simple Spring Boot Gateway implementation. This gateway was created to
 This service connects our schoolmates microservices and provides a secure entrance to our service cluster.
 
 ## Current configuration
-The Gateway is by default configured to run with the [Authentication service](https://github.com/fredrik-philippe-vimbayi/auth-microservice). [Image service](https://github.com/Patlenlix/image-storage) and [URL shortener service](https://github.com/DarkendHall/url_shortener).</br>
+The Gateway is by default configured to run with the [Authentication service](https://github.com/fredrik-philippe-vimbayi/auth-microservice), the [Image service](https://github.com/Patlenlix/image-storage) and the [URL shortener service](https://github.com/DarkendHall/url_shortener).</br>
 To `add more routes/services`, please see `step 7 of Deployment`
 
 ## Deployment

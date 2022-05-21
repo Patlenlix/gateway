@@ -29,6 +29,7 @@ spring:
         - id: url-shortening-service
           uri: lb://url-shortener
           predicates:
-            - Path=/short/**
+            - Path=/short/**, /s/**
           filters:
             - RewritePath=/short/(?<path>.*), /short/$\{path}
+            - RewritePath=/s/(?<path>.*), /s/$\{path}

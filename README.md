@@ -72,7 +72,7 @@ key:
 8. Run Dockerfile while standing in project root</br>
    `docker build -t gateway:latest .`
 9. Start the Gateway container</br>
-   `docker run -d --name gateway -p 8000:8000 --network=net -e CONSUL_HOST=consul ghcr.io/patlenlix/gateway:latest`
+   `docker run -d --name gateway -p 8000:8000 --network=net -e CONSUL_HOST=consul gateway:latest`
 10. To add more routes/services 
     1. Add a new route in `Consul Key/Value config file` with appropriate `predicates` (paths) and `filters` (redirections)
     2. Add a new `endpoint` under `path.matchers.authenticate` matching the paths of the new service, separate with ","

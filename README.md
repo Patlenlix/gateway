@@ -18,11 +18,13 @@ To `add more routes/services`, please see `step 7 of Deployment`
 3. Add config file to consul
    1. Open Consul UI: [http://localhost:8500](http://localhost:8500)
    2. Go to Key/Value
-   3. Create the following folder structure: `config/image-service/`
-   4. Create a file named: `data (.yml)`
+   3. Create the following folder structure: `config/gateway/`
+   4. Create a file named: `data` (yaml format)
    5. Add the following YML data:
 
 ```yaml
+server:
+   port: 8000
 spring:
    cloud:
       consul:
@@ -30,8 +32,31 @@ spring:
             register: false
             registerHealthCheck: false
          host: consul
-server:
-   port: 8000
+      gateway:
+         routes:
+            - id: authentication
+              uri: lb://authentication
+              predicates:
+                 - Path=/auth/**
+              filters:
+                 - RewritePath=/auth/(?<path>.*), /$\{path}
+            - id: image-service
+              uri: lb://image-service
+              predicates:
+                 - Path=/images/**
+              filters:
+                 - RewritePath=/images/(?<path>.*), /images/$\{path}
+            - id: url-shortening-service
+              uri: lb://url-shortener
+              predicates:
+                 - Path=/short/**, /s/**
+              filters:
+                 - RewritePath=/short/(?<path>.*), /short/$\{path}
+                 - RewritePath=/s/(?<path>.*), /s/$\{path}
+path:
+   matchers:
+      permit: /s/**
+      authenticate: /images/**,/short/**
 key:
    public: <your-public-key
 ``` 
@@ -48,6 +73,6 @@ key:
    `docker build -t gateway:latest .`
 9. Start the Gateway container</br>
    `docker run -d --name gateway -p 8000:8000 --network=net -e CONSUL_HOST=consul ghcr.io/patlenlix/gateway:latest`
-10. To add more routes/services
-    1. Add a new line with `.pathMatchers()` in the `SecurityConfiguration` matching the endpoints of the new service
-    2. Add a new route in `application.yml` with appropriate `predicates` (paths) and `filters` (redirections)
+10. To add more routes/services 
+    1. Add a new route in `Consul Key/Value config file` with appropriate `predicates` (paths) and `filters` (redirections)
+    2. Add a new `endpoint` under `path.matchers.authenticate` matching the paths of the new service, separate with ","

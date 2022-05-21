@@ -1,8 +1,8 @@
 package se.iths.gateway.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -15,6 +15,12 @@ import se.iths.gateway.auth.AuthenticationManager;
 @EnableWebFluxSecurity
 public class SecurityConfiguration {
 
+    @Value("${path.matchers.authenticate:/**}")
+    String[] authenticationMatchers;
+
+    @Value("${path.matchers.permit:/auth/**}")
+    String[] permittedMatchers;
+
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository;
 
@@ -25,6 +31,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+
         return http
                 .httpBasic().disable()
                 .csrf().disable()
@@ -40,9 +47,8 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeExchange()
                 .pathMatchers("/auth/**").permitAll()
-                .pathMatchers("/images/**").authenticated()
-                .pathMatchers("/short/**").authenticated()
-                .pathMatchers(HttpMethod.GET, "/s/**").permitAll()
+                .pathMatchers(authenticationMatchers).authenticated()
+                .pathMatchers(permittedMatchers).permitAll()
                 .anyExchange().hasRole("ADMIN")
                 .and().build();
     }

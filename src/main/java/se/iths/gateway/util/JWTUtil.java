@@ -16,7 +16,7 @@ import java.util.Base64;
 @Component
 public class JWTUtil {
 
-    @Value("${key.public}")
+    @Value("${key.public:secret-key}")
     private String encodedKey;
 
     public Jws<Claims> getAllClaimsFromToken(String authToken) throws NoSuchAlgorithmException, InvalidKeySpecException {
